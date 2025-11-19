@@ -1,10 +1,23 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Truck, Brain, BarChart3, Bell } from "lucide-react";
+import { Truck, Brain, BarChart3, Bell, Share2, type LucideIcon } from "lucide-react";
 import Button from "../ui/Button";
 
-export default function Header() {
+type HeaderTab = "load-plan" | "pricing" | "network";
+
+interface HeaderProps {
+  activeTab: HeaderTab;
+  onTabChange: (tab: HeaderTab) => void;
+}
+
+const navItems: { id: HeaderTab; label: string; icon: LucideIcon }[] = [
+  { id: "load-plan", label: "3D Load Plan", icon: BarChart3 },
+  { id: "pricing", label: "Dynamic Pricing", icon: Brain },
+  { id: "network", label: "Network Balance", icon: Share2 }
+];
+
+export default function Header({ activeTab, onTabChange }: HeaderProps) {
   return (
     <motion.header
       initial={{ y: -100, opacity: 0 }}
@@ -31,23 +44,38 @@ export default function Header() {
           </motion.div>
 
           {/* Navigation */}
-          <nav className="hidden md:flex items-center gap-6">
-            <motion.a
-              href="#load-plan"
-              className="flex items-center gap-2 text-gray-300 hover:text-white transition-colors"
-              whileHover={{ scale: 1.05 }}
-            >
-              <BarChart3 className="w-4 h-4" />
-              <span>3D Load Plan</span>
-            </motion.a>
-            <motion.a
-              href="#pricing"
-              className="flex items-center gap-2 text-gray-300 hover:text-white transition-colors"
-              whileHover={{ scale: 1.05 }}
-            >
-              <Brain className="w-4 h-4" />
-              <span>Dynamic Pricing</span>
-            </motion.a>
+          <nav className="hidden md:flex items-center gap-3">
+            {navItems.map((item) => {
+              const isActive = activeTab === item.id;
+              return (
+                <motion.button
+                  key={item.id}
+                  type="button"
+                  onClick={() => onTabChange(item.id)}
+                  aria-pressed={isActive}
+                  aria-label={`Show ${item.label}`}
+                  className={`relative overflow-hidden rounded-2xl border px-4 py-2 text-sm font-semibold transition-all
+                    ${isActive
+                      ? "text-white border-white/30 shadow-lg shadow-blue-500/30"
+                      : "text-gray-300 border-transparent hover:text-white hover:border-white/20"}
+                  `}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  {isActive && (
+                    <motion.span
+                      layoutId="header-active-glow"
+                      className="absolute inset-0 bg-gradient-to-r from-blue-600/30 to-cyan-600/30"
+                      transition={{ type: "spring", stiffness: 260, damping: 30 }}
+                    />
+                  )}
+                  <span className="relative z-10 flex items-center gap-2">
+                    <item.icon className={`w-4 h-4 ${isActive ? "text-white" : "text-gray-400"}`} />
+                    {item.label}
+                  </span>
+                </motion.button>
+              );
+            })}
           </nav>
 
           {/* Actions */}
