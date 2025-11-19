@@ -28,7 +28,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
-      <Header />
+      <Header activeTab={activeTab} onTabChange={setActiveTab} />
       
       <main className="container mx-auto px-6 pt-32 pb-12">
         {/* Hero Section */}
@@ -59,8 +59,10 @@ export default function Home() {
         {/* Content Area */}
         <AnimatePresence mode="wait">
           {activeTab === "load-plan" && (
-            <motion.div
+            <motion.section
               key="load-plan"
+              id="load-plan"
+              aria-labelledby="load-plan-heading"
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: 20 }}
@@ -80,7 +82,7 @@ export default function Home() {
                 <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-2xl blur-xl opacity-30"></div>
                 <div className="relative bg-slate-900 rounded-2xl p-6 border border-white/10">
                   <div className="mb-4">
-                    <h3 className="text-2xl font-bold text-white mb-2">3D Load Planning Simulation</h3>
+                    <h3 id="load-plan-heading" className="text-2xl font-bold text-white mb-2">3D Load Planning Simulation</h3>
                     <p className="text-gray-400">Real-time bin packing algorithm visualization (Digital Twin)</p>
                   </div>
                   <div className="w-full h-[600px]">
@@ -104,12 +106,14 @@ export default function Home() {
                   </div>
                 </div>
               </motion.div>
-            </motion.div>
+            </motion.section>
           )}
 
           {activeTab === "pricing" && (
-            <motion.div
+            <motion.section
               key="pricing"
+              id="pricing"
+              aria-label="Dynamic pricing heatmap"
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: 20 }}
@@ -121,19 +125,21 @@ export default function Home() {
                   <IndonesiaMap />
                 </div>
               </div>
-            </motion.div>
+            </motion.section>
           )}
 
           {activeTab === "network" && (
-            <motion.div
+            <motion.section
               key="network"
+              id="network"
+              aria-label="Network balancing insights"
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: 20 }}
               transition={{ duration: 0.3 }}
             >
               <NetworkBalance />
-            </motion.div>
+            </motion.section>
           )}
         </AnimatePresence>
 

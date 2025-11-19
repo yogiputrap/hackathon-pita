@@ -5,25 +5,54 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-// Simulate bin packing algorithm data
+// Simulate bin packing algorithm data with precise grid placement inside the truck
 export function generatePackages(count: number = 15) {
   const colors = [
-    "#FF6B6B", "#4ECDC4", "#45B7D1", "#FFA07A", 
+    "#FF6B6B", "#4ECDC4", "#45B7D1", "#FFA07A",
     "#98D8C8", "#F7DC6F", "#BB8FCE", "#85C1E2"
   ];
-  
-  return Array.from({ length: count }, (_, i) => ({
-    id: i + 1,
-    width: Math.random() * 0.8 + 0.4,
-    height: Math.random() * 0.8 + 0.4,
-    depth: Math.random() * 0.8 + 0.4,
-    color: colors[i % colors.length],
-    position: {
-      x: (Math.random() - 0.5) * 4,
-      y: Math.random() * 3,
-      z: (Math.random() - 0.5) * 2
-    }
-  }));
+
+  const rows = 3; // front-to-back slots
+  const columns = 3; // left-to-right slots
+  const layers = 3; // vertical stacking
+  const perLayer = rows * columns;
+  const maxPackages = rows * columns * layers;
+  const totalPackages = Math.min(count, maxPackages);
+
+  const startX = -1.6;
+  const startZ = -0.8;
+  const xSpacing = 1.6;
+  const zSpacing = 0.8;
+  const baseY = 0.4;
+  const ySpacing = 0.9;
+
+  return Array.from({ length: totalPackages }, (_, index) => {
+    const layerIndex = Math.floor(index / perLayer);
+    const slotIndex = index % perLayer;
+    const rowIndex = Math.floor(slotIndex / columns);
+    const columnIndex = slotIndex % columns;
+
+    const width = 0.65 + ((rowIndex + columnIndex) % 3) * 0.1;
+    const height = 0.55 + (layerIndex % 2) * 0.15;
+    const depth = 0.65 + ((rowIndex + columnIndex) % 2) * 0.1;
+
+    const x = startX + rowIndex * xSpacing;
+    const z = startZ + columnIndex * zSpacing;
+    const y = baseY + layerIndex * ySpacing;
+
+    return {
+      id: index + 1,
+      width: Number(width.toFixed(2)),
+      height: Number(height.toFixed(2)),
+      depth: Number(depth.toFixed(2)),
+      color: colors[index % colors.length],
+      position: {
+        x: Number(x.toFixed(2)),
+        y: Number(y.toFixed(2)),
+        z: Number(z.toFixed(2))
+      }
+    };
+  });
 }
 
 // Generate network data for Indonesia routes

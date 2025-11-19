@@ -1,10 +1,15 @@
 "use client";
 
-import { useRef } from "react";
-import { Mesh } from "three";
+import { useEffect, useMemo, useRef } from "react";
+import { Mesh, BoxGeometry } from "three";
 
 export default function TruckModel() {
   const truckRef = useRef<Mesh>(null);
+  const frameGeometry = useMemo(() => new BoxGeometry(5, 3, 2.5), []);
+
+  useEffect(() => {
+    return () => frameGeometry.dispose();
+  }, [frameGeometry]);
 
   return (
     <group position={[0, 0, 0]}>
@@ -26,7 +31,7 @@ export default function TruckModel() {
       
       {/* Truck Frame/Wireframe */}
       <lineSegments position={[0, 1.5, 0]}>
-        <edgesGeometry args={[new THREE.BoxGeometry(5, 3, 2.5)]} />
+        <edgesGeometry args={[frameGeometry]} />
         <lineBasicMaterial color="#60a5fa" linewidth={2} />
       </lineSegments>
 
@@ -51,8 +56,4 @@ export default function TruckModel() {
       ))}
     </group>
   );
-}
-
-declare global {
-  const THREE: typeof import('three');
 }

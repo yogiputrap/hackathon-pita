@@ -72,7 +72,7 @@ export default function LoadPlanStats() {
   ];
 
   return (
-    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
       {stats.map((stat, index) => (
         <motion.div
           key={stat.label}
@@ -80,8 +80,9 @@ export default function LoadPlanStats() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: index * 0.1 }}
           whileHover={{ scale: 1.05, y: -5 }}
-          className={`${stat.bgColor} backdrop-blur-xl rounded-2xl p-6 border border-white/10 shadow-xl`}
+          className={`${stat.bgColor} relative overflow-hidden backdrop-blur-xl rounded-2xl p-6 border border-white/10 shadow-xl h-full flex flex-col justify-between`}
         >
+          <span className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-transparent pointer-events-none" aria-hidden="true" />
           <div className="flex items-start justify-between mb-4">
             <div className={`p-3 rounded-xl bg-gradient-to-br ${stat.color}`}>
               <stat.icon className="w-6 h-6 text-white" />
